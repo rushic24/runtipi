@@ -62,6 +62,7 @@ INTERNAL_IP="$(ip addr show "${NETWORK_INTERFACE}" | grep "inet " | awk '{print 
 DNS_IP=9.9.9.9 # Default to Quad9 DNS
 ARCHITECTURE="$(uname -m)"
 
+# Check root folder upon install
 if [[ $(dirname "$0") != "scripts" ]]; then
   echo "Please make sure this script is executed from runtipi/"
   exit 1
