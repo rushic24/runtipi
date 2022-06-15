@@ -62,6 +62,11 @@ INTERNAL_IP="$(ip addr show "${NETWORK_INTERFACE}" | grep "inet " | awk '{print 
 DNS_IP=9.9.9.9 # Default to Quad9 DNS
 ARCHITECTURE="$(uname -m)"
 
+if [[ $(dirname "$0") != "scripts" ]]; then
+  echo "Please make sure this script is executed from runtipi/"
+  exit 1
+fi
+
 if [[ "$ARCHITECTURE" == "aarch64" ]]; then
   ARCHITECTURE="arm64"
 fi
@@ -101,7 +106,7 @@ function derive_entropy() {
   printf "%s" "${identifier}" | openssl dgst -sha256 -hmac "${tipi_seed}" | sed 's/^.* //'
 }
 
-TZ="$(cat /etc/timezone | sed 's/\//\\\//g' || echo "Europe/Berlin")"
+TZ="$(timedatectl | grep "Time zone" | awk '{print $3}' || echo "Europe/Berlin")"
 
 # Copy the app state if it isn't here
 if [[ ! -f "${STATE_FOLDER}/apps.json" ]]; then
